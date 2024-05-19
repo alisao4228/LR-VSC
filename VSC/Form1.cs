@@ -42,10 +42,53 @@ namespace VSC
                         {
                             DataTable dataTable = result.Tables[0];
                             Table_DataGridView.DataSource = dataTable;
+                            // Построение графиков на основе данных из DataGridView
+                            CreateChart(dataTable);
+                        }
 
+                    }
+                }
+            }
+        }
+        private void CreateChart(DataTable dataTable)
+        {
+            // Очистка предыдущих настроек
+            Chart.Series.Clear();
+            Chart.ChartAreas.Clear();
+            Chart.ChartAreas.Add(new ChartArea("MainArea"));
+
+            // Используем первый столбец в качестве оси X
+            var xColumn = dataTable.Columns[0];
+
+            // Поиск числовых колонок для построения графиков, исключая первый столбец
+            var numericColumns = dataTable.Columns.Cast<DataColumn>()
+                                .Where(col => col != xColumn && (col.DataType == typeof(double) || col.DataType == typeof(int)))
+                                .ToList();
+
+            if (numericColumns.Count == 0)
+            {
+                MessageBox.Show("Не найдены числовые столбцы для построения графиков.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Добавление данных в график
+            foreach (var numericColumn in numericColumns)
+            {
+                var series = new Series(numericColumn.ColumnName) { ChartType = SeriesChartType.Line };
+
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    if (row[xColumn] != DBNull.Value && row[numericColumn] != DBNull.Value)
+                    {
+                        // Попытка преобразовать значения оси X и Y
+                        if (double.TryParse(row[xColumn].ToString(), out double xValue) && double.TryParse(row[numericColumn].ToString(), out double yValue))
+                        {
+                            series.Points.AddXY(xValue, yValue);
                         }
                     }
                 }
+
+                Chart.Series.Add(series);
             }
         }
     }
