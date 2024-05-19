@@ -74,10 +74,7 @@ namespace VSC
             // Добавление данных в график
             foreach (var numericColumn in numericColumns)
             {
-                var series = new Series(numericColumn.ColumnName)
-                {
-                    ChartType = SeriesChartType.Line
-                };
+                var series = new Series(numericColumn.ColumnName) { ChartType = SeriesChartType.Line };
 
                 foreach (DataRow row in dataTable.Rows)
                 {
@@ -87,11 +84,6 @@ namespace VSC
                         if (double.TryParse(row[xColumn].ToString(), out double xValue) && double.TryParse(row[numericColumn].ToString(), out double yValue))
                         {
                             series.Points.AddXY(xValue, yValue);
-                        }
-                        // В случае неудачи преобразования значения оси X в double, попробуем преобразовать в int
-                        else if (int.TryParse(row[xColumn].ToString(), out int xValueInt) && double.TryParse(row[numericColumn].ToString(), out yValue))
-                        {
-                            series.Points.AddXY(xValueInt, yValue);
                         }
                     }
                 }
