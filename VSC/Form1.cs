@@ -47,10 +47,19 @@ namespace VSC
                             CreateChart(dataTable);
                             // Вычисление изменения преступности
                             CalculateCrimeTrends(dataTable);
+                            // Определение типа данных и выполнение соответствующей обработки
+                            DetermineDataTypeAndProcess(dataTable);
                         }
 
                     }
                 }
+            }
+        }
+        private void DetermineDataTypeAndProcess(DataTable dataTable)
+        {
+            if (dataTable.Columns.Contains("Вид преступности"))
+            {
+                CalculateCrimeTrends(dataTable);
             }
         }
         private void CalculateCrimeTrends(DataTable dataTable)
