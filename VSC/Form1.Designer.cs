@@ -86,7 +86,7 @@
             this.Extrapolate_Button.TabIndex = 9;
             this.Extrapolate_Button.Text = "Реализовать статистическое прогнозирование";
             this.Extrapolate_Button.UseVisualStyleBackColor = true;
-            this.Extrapolate_Button.Click += new System.EventHandler(this.Extrapolate_Button_Click);
+
             // 
             // Result_richTextBox
             // 
