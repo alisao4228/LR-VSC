@@ -45,10 +45,20 @@ namespace VSC
                             Table_DataGridView.DataSource = dataTable;
                             // Построение графиков на основе данных из DataGridView
                             CreateChart(dataTable);
+
+                            DetermineDataTypeAndProcess(dataTable);
                         }
 
                     }
                 }
+            }
+        }
+
+        private void DetermineDataTypeAndProcess(DataTable dataTable)
+        {
+            if (dataTable.Columns.Contains("Регион России"))
+            {
+                FindPopulationChanges(dataTable);
             }
         }
 
