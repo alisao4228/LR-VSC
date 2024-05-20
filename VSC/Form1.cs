@@ -45,8 +45,7 @@ namespace VSC
                             Table_DataGridView.DataSource = dataTable;
                             // Построение графиков на основе данных из DataGridView
                             CreateChart(dataTable);
-                            // Вычисление изменения преступности
-                            CalculateCrimeTrends(dataTable);
+                            
                             // Определение типа данных и выполнение соответствующей обработки
                             DetermineDataTypeAndProcess(dataTable);
                         }
