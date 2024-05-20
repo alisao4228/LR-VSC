@@ -14,14 +14,31 @@ namespace VSC
     {
         private ExcelHandler excelHandler;
         private ChartHandler chartHandler;
-        
+        private DataProcessor dataProcessor;
+        private ExtrapolationHandler extrapolationHandler;
 
         public Form1()
         {
             InitializeComponent();
             excelHandler = new ExcelHandler();
             chartHandler = new ChartHandler(Chart);
+            dataProcessor = new DataProcessor(Result_richTextBox);
+            extrapolationHandler = new ExtrapolationHandler(Chart, Result_richTextBox);
+        }
 
+        private void Extrapolate_Button_Click(object sender, EventArgs e)
+        {
+            if (Table_DataGridView.DataSource is DataTable dataTable)
+            {
+                if (int.TryParse(Extrapolate_TextBox.Text, out int years) && years > 0)
+                {
+                    extrapolationHandler.ExtrapolateData(dataTable, years);
+                }
+                else
+                {
+                    MessageBox.Show("Введите корректное положительное число лет для экстраполяции.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
         private void Open_Button_Click(object sender, EventArgs e)
@@ -39,9 +56,9 @@ namespace VSC
                 {
                     Table_DataGridView.DataSource = dataTable;
                     chartHandler.CreateChart(dataTable);
-                   
+                    dataProcessor.DetermineDataTypeAndProcess(dataTable);
                 }
             }
         }
-}
+    }
 }
