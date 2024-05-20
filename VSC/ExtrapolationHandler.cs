@@ -21,7 +21,7 @@ namespace VSC
             this.Result_richTextBox = resultTextBox;
         }
 
-        private void ExtrapolateData(DataTable dataTable, int years)
+        public void ExtrapolateData(DataTable dataTable, int years)
         {
             // Очистка предыдущих данных
             Result_richTextBox.Clear();
