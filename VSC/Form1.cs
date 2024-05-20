@@ -45,11 +45,72 @@ namespace VSC
                             Table_DataGridView.DataSource = dataTable;
                             // Построение графиков на основе данных из DataGridView
                             CreateChart(dataTable);
+                            // Вычисление изменения преступности
+                            CalculateCrimeTrends(dataTable);
+                            // Определение типа данных и выполнение соответствующей обработки
+                            DetermineDataTypeAndProcess(dataTable);
                         }
 
                     }
                 }
             }
+        }
+        private void DetermineDataTypeAndProcess(DataTable dataTable)
+        {
+            if (dataTable.Columns.Contains("Вид преступности"))
+            {
+                CalculateCrimeTrends(dataTable);
+            }
+        }
+        private void CalculateCrimeTrends(DataTable dataTable)
+        {
+            var xColumn = dataTable.Columns[0];
+
+            // Поиск числовых колонок для анализа, исключая первый столбец
+            var numericColumns = dataTable.Columns.Cast<DataColumn>()
+                                .Where(col => col != xColumn && (col.DataType == typeof(double) || col.DataType == typeof(int)))
+                                .ToList();
+
+            if (numericColumns.Count == 0)
+            {
+                MessageBox.Show("Не найдены числовые столбцы для анализа.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string maxDecreaseCrimeType = "";
+            string minDecreaseCrimeType = "";
+            double maxDecreaseValue = double.MinValue;
+            double minDecreaseValue = double.MaxValue;
+            // Анализ каждого числового столбца
+            foreach (var numericColumn in numericColumns)
+            {
+                var values = dataTable.AsEnumerable()
+                                      .Where(row => row[numericColumn] != DBNull.Value)
+                                      .Select(row => Convert.ToDouble(row[numericColumn]))
+                                      .ToList();
+
+                if (values.Count < 2) continue; // Пропустить анализ, если недостаточно данных
+
+                double initial = values.First();
+                double final = values.Last();
+                double decrease = initial - final;
+
+                if (decrease > maxDecreaseValue)
+                {
+                    maxDecreaseValue = decrease;
+                    maxDecreaseCrimeType = numericColumn.ColumnName;
+                }
+
+                if (decrease < minDecreaseValue)
+                {
+                    minDecreaseValue = decrease;
+                    minDecreaseCrimeType = numericColumn.ColumnName;
+                }
+            }
+
+            Result_richTextBox.Clear();
+            Result_richTextBox.AppendText($"Вид преступности, который снизился больше всего: {maxDecreaseCrimeType} ({maxDecreaseValue})\n");
+            Result_richTextBox.AppendText($"Вид преступности, который снизился меньше всего: {minDecreaseCrimeType} ({minDecreaseValue})");
         }
         private void CreateChart(DataTable dataTable)
         {
