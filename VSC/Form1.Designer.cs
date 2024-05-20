@@ -68,7 +68,6 @@
             this.Open_Button.TabIndex = 3;
             this.Open_Button.Text = "Открыть файл";
             this.Open_Button.UseVisualStyleBackColor = true;
-            this.Open_Button.Click += new System.EventHandler(this.Open_Button_Click);
             // 
             // Extrapolate_TextBox
             // 
@@ -86,7 +85,6 @@
             this.Extrapolate_Button.TabIndex = 9;
             this.Extrapolate_Button.Text = "Реализовать статистическое прогнозирование";
             this.Extrapolate_Button.UseVisualStyleBackColor = true;
-            this.Extrapolate_Button.Click += new System.EventHandler(this.Extrapolate_Button_Click);
             // 
             // Result_richTextBox
             // 
